@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<!-- install.html — Nova AI Assistant — Installation Guide -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova — Installation Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .page-hero {
+      position: relative; z-index: 2;
+      padding: 140px clamp(20px,6vw,80px) 80px;
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 0%, rgba(0,230,118,0.08) 0%, transparent 65%);
+    }
+    .page-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem,5vw,4rem);
+      font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px;
+    }
+    .page-hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 560px; margin: 0 auto; }
+
+    /* ── Step Cards ────────────────────────────────────────────── */
+    .steps-list { display: flex; flex-direction: column; gap: 20px; }
+
+    .step-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .step-card:hover { border-color: rgba(124,111,255,0.35); }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 22px 28px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+    }
+
+    .step-num {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--grad-main);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: 0 0 16px var(--glow);
+    }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      flex: 1;
+    }
+
+    .step-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .step-body { padding: 24px 28px; }
+
+    .step-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+
+    /* ── Code Blocks ───────────────────────────────────────────── */
+    .code-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .code-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    pre {
+      padding: 16px 20px;
+      font-family: var(--font-mono);
+      font-size: 0.83rem;
+      line-height: 1.75;
+      color: var(--accent2);
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    pre .comment { color: var(--text-dim); }
+    pre .keyword { color: var(--accent); }
+    pre .output  { color: var(--success); }
+    pre .url     { color: #ff9d00; }
+
+    /* ── OS Tabs ───────────────────────────────────────────────── */
+    .os-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .os-tab {
+      padding: 7px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .os-tab.active, .os-tab:hover {
+      background: rgba(124,111,255,0.15);
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    /* ── Troubleshoot Table ─────────────────────────────────────── */
+    .trouble-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .trouble-table th {
+      text-align: left;
+      padding: 12px 16px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .trouble-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(120,100,255,0.07);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .trouble-table tr:last-child td { border-bottom: none; }
+    .trouble-table .err { color: #ff6b6b; font-family: var(--font-mono); font-size: 0.8rem; }
+    .trouble-table .fix { color: var(--success); }
+
+    /* ── Hosting section ────────────────────────────────────────── */
+    .hosting-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media(max-width:700px){ .hosting-grid { grid-template-columns: 1fr; } }
+
+    .host-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .host-card-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .host-card-body { padding: 20px 22px; }
+
+    .host-steps { list-style: none; counter-reset: hstep; }
+    .host-steps li {
+      counter-increment: hstep;
+      padding: 8px 0 8px 36px;
+      position: relative;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(120,100,255,0.07);
+      line-height: 1.55;
+    }
+    .host-steps li:last-child { border-bottom: none; }
+    .host-steps li::before {
+      content: counter(hstep);
+      position: absolute; left: 0; top: 8px;
+      width: 22px; height: 22px;
+      background: rgba(124,111,255,0.2);
+      border: 1px solid rgba(124,111,255,0.3);
+      border-radius: 50%;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent);
+    }
+    .host-steps code {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent2);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-noise"></div>
+  <div class="bg-grid"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-logo"><span class="bolt">⚡</span><span>NOVA</span></a>
+    <button class="nav-hamburger">☰</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="how-it-works.html">How It Works</a></li>
+      <li><a href="install.html" class="active">Install</a></li>
+      <li><a href="install.html" class="nav-cta btn">Get Started →</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <div class="section-label" style="margin:0 auto 16px;width:fit-content">Setup Guide</div>
+    <h1>Get Nova <span style="background:var(--grad-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">running.</span></h1>
+    <p>From zero to a running AI assistant in under 2 minutes. Step-by-step instructions for every OS.</p>
+  </div>
+
+  <!-- Requirements -->
+  <section class="section" style="padding-top:0">
+    <div class="section-inner">
+      <div class="section-label">Before You Start</div>
+      <h2 class="section-title reveal">Requirements.</h2>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:48px" class="reveal">
+        <div class="card" style="text-align:center">
+          <div style="font-size:2rem;margin-bottom:8px">🐍</div>
+          <div style="font-family:var(--font-display);font-weight:700;margin-bottom:4px">Python 3.8+</div>
+          <div style="font-size:0.82rem;color:var(--text-muted)">python.org/downloads</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:2rem;margin-bottom:8px">📦</div>
+          <div style="font-family:var(--font-display);font-weight:700;margin-bottom:4px">pip</div>
+          <div style="font-size:0.82rem;color:var(--text-muted)">Comes with Python</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:2rem;margin-bottom:8px">🌐</div>
+          <div style="font-family:var(--font-display);font-weight:700;margin-bottom:4px">Chrome / Edge</div>
+          <div style="font-size:0.82rem;color:var(--text-muted)">For voice features</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:2rem;margin-bottom:8px">🔊</div>
+          <div style="font-family:var(--font-display);font-weight:700;margin-bottom:4px">Speakers</div>
+          <div style="font-size:0.82rem;color:var(--text-muted)">For audio output</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step-by-Step Installation -->
+  <section class="section" style="padding-top:0">
+    <div class="section-inner">
+      <div class="section-label">Installation</div>
+      <h2 class="section-title reveal">Step-by-step <span class="highlight">setup.</span></h2>
+
+      <div class="steps-list">
+
+        <!-- Step 1: Download -->
+        <div class="step-card reveal">
+          <div class="step-header">
+            <div class="step-num">1</div>
+            <div class="step-title">Download the project</div>
+            <span class="step-badge tag tag-cyan">Download</span>
+          </div>
+          <div class="step-body">
+            <p class="step-desc">Download the ZIP file from GitHub and extract it to a folder on your computer.</p>
+            <div class="code-block">
+              <div class="code-topbar">
+                <span>terminal / command prompt</span>
+                <button class="copy-btn" data-target="#code-clone">Copy</button>
+              </div>
+              <pre id="code-clone"><span class="comment"># Option A: Clone with Git</span>
+git clone https://github.com/yourusername/Nova_Assistant.git
+cd Nova_Assistant
+
+<span class="comment"># Option B: Download ZIP and extract, then open terminal in folder</span>
+cd Nova_Assistant</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Python check -->
+        <div class="step-card reveal">
+          <div class="step-header">
+            <div class="step-num">2</div>
+            <div class="step-title">Check Python is installed</div>
+            <span class="step-badge tag tag-purple">Verify</span>
+          </div>
+          <div class="step-body">
+            <p class="step-desc">Open your terminal (or Command Prompt on Windows) and verify Python 3.8+ is installed.</p>
+            <div class="os-tabs">
+              <button class="os-tab active">Windows</button>
+              <button class="os-tab">Mac / Linux</button>
+            </div>
+            <div class="code-block">
+              <div class="code-topbar">
+                <span>Command Prompt / PowerShell</span>
+                <button class="copy-btn" data-target="#code-pycheck">Copy</button>
+              </div>
+              <pre id="code-pycheck">python --version
+<span class="comment"># Expected output:</span>
+<span class="output">Python 3.11.0</span>
+
+<span class="comment"># If "python" doesn't work, try:</span>
+python3 --version</pre>
+            </div>
+            <p class="step-desc" style="margin-top:12px;margin-bottom:0">
+              If Python is not installed, download it from <strong>python.org/downloads</strong>. Make sure to check <em>"Add Python to PATH"</em> during installation on Windows.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 3: Install dependencies -->
+        <div class="step-card reveal">
+          <div class="step-header">
+            <div class="step-num">3</div>
+            <div class="step-title">Install required libraries</div>
+            <span class="step-badge tag tag-green">Install</span>
+          </div>
+          <div class="step-body">
+            <p class="step-desc">In your terminal, inside the Nova_Assistant folder, run this one command to install everything:</p>
+            <div class="code-block">
+              <div class="code-topbar">
+                <span>terminal</span>
+                <button class="copy-btn" data-target="#code-install">Copy</button>
+              </div>
+              <pre id="code-install">pip install -r requirements.txt
+
+<span class="comment"># This installs:</span>
+<span class="output">  flask       ← web server</span>
+<span class="output">  pyttsx3     ← text-to-speech (offline)</span>
+<span class="output">  wikipedia   ← Wikipedia search</span></pre>
+            </div>
+            <p class="step-desc" style="margin-top:12px;margin-bottom:0">
+              If you get a permission error on Mac/Linux, use: <code style="background:var(--surface2);padding:2px 8px;border-radius:4px;font-family:var(--font-mono);font-size:0.82rem">pip3 install -r requirements.txt</code>
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 4: Run -->
+        <div class="step-card reveal">
+          <div class="step-header">
+            <div class="step-num">4</div>
+            <div class="step-title">Run the assistant</div>
+            <span class="step-badge tag tag-green">Launch 🚀</span>
+          </div>
+          <div class="step-body">
+            <p class="step-desc">Start the Flask server with this command. Keep this terminal window open while using Nova.</p>
+            <div class="code-block">
+              <div class="code-topbar">
+                <span>terminal — inside Nova_Assistant/</span>
+                <button class="copy-btn" data-target="#code-run">Copy</button>
+              </div>
+              <pre id="code-run">python app.py
+
+<span class="comment"># You will see this output:</span>
+<span class="output">═══════════════════════════════════════════════════════
+  ⚡  NOVA — AI Assistant is starting up...
+═══════════════════════════════════════════════════════
+  ➤  Open your browser: http://127.0.0.1:5000
+  ➤  Press CTRL+C to stop the server
+═══════════════════════════════════════════════════════</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Open Browser -->
+        <div class="step-card reveal">
+          <div class="step-header">
+            <div class="step-num">5</div>
+            <div class="step-title">Open in your browser</div>
+            <span class="step-badge tag tag-cyan">Use it!</span>
+          </div>
+          <div class="step-body">
+            <p class="step-desc">Open <strong>Google Chrome</strong> or <strong>Microsoft Edge</strong> (recommended for voice features) and go to:</p>
+            <div class="code-block">
+              <div class="code-topbar">
+                <span>browser address bar</span>
+                <button class="copy-btn" data-target="#code-url">Copy</button>
+              </div>
+              <pre id="code-url"><span class="url">http://127.0.0.1:5000</span></pre>
+            </div>
+            <p class="step-desc" style="margin-top:12px;margin-bottom:0">
+              ✅ You should see the Nova chat interface. Type a message and press Enter — or click 🎤 to speak!
+              <br><br>
+              💡 <strong>Tip:</strong> Allow microphone access when prompted by the browser for voice input to work.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- VS Code setup -->
+  <section class="section" style="padding-top:0">
+    <div class="section-inner">
+      <div class="section-label">Editor Setup</div>
+      <h2 class="section-title reveal">Running in <span class="highlight">VS Code.</span></h2>
+
+      <div class="step-card reveal">
+        <div class="step-body">
+          <ol style="padding-left:20px;display:flex;flex-direction:column;gap:16px;color:var(--text-muted);font-size:0.9rem;line-height:1.6">
+            <li>Open VS Code and go to <strong>File → Open Folder</strong> → select <code>Nova_Assistant</code></li>
+            <li>Open the built-in terminal: <strong>View → Terminal</strong> (or press <kbd style="background:var(--surface2);padding:2px 8px;border-radius:4px;font-family:var(--font-mono);font-size:0.8rem">Ctrl + `</kbd>)</li>
+            <li>Install the <strong>Python extension</strong> by Microsoft if prompted</li>
+            <li>In the terminal, run: <code style="background:var(--surface2);padding:2px 8px;border-radius:4px;font-family:var(--font-mono);font-size:0.82rem;color:var(--accent2)">pip install -r requirements.txt</code></li>
+            <li>Then run: <code style="background:var(--surface2);padding:2px 8px;border-radius:4px;font-family:var(--font-mono);font-size:0.82rem;color:var(--accent2)">python app.py</code></li>
+            <li>Click the link <code style="color:var(--accent2)">http://127.0.0.1:5000</code> that appears — or open it in Chrome manually</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GitHub Pages Hosting -->
+  <section class="section" style="padding-top:0" id="download">
+    <div class="section-inner">
+      <div class="section-label">Free Hosting</div>
+      <h2 class="section-title reveal">Host your <span class="highlight">portfolio website.</span></h2>
+      <p class="section-desc reveal">The portfolio website (these pages) can be hosted free on GitHub Pages. The Python app runs locally — only the website can be hosted online.</p>
+
+      <div class="hosting-grid">
+        <!-- Local hosting -->
+        <div class="host-card reveal">
+          <div class="host-card-header">💻 Run Locally (VS Code)</div>
+          <div class="host-card-body">
+            <ul class="host-steps">
+              <li>Open the <code>Nova_Website/</code> folder in VS Code</li>
+              <li>Install the <strong>Live Server</strong> extension (by Ritwick Dey)</li>
+              <li>Right-click on <code>index.html</code></li>
+              <li>Click <strong>"Open with Live Server"</strong></li>
+              <li>Browser auto-opens at <code>http://127.0.0.1:5500</code></li>
+              <li>Any file edits auto-refresh the browser ✅</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- GitHub Pages -->
+        <div class="host-card reveal reveal-delay-1">
+          <div class="host-card-header">🌍 Host Free on GitHub Pages</div>
+          <div class="host-card-body">
+            <ul class="host-steps">
+              <li>Create a free account at <code>github.com</code></li>
+              <li>Create a new repository named <code>nova-assistant</code></li>
+              <li>Upload all files from <code>Nova_Website/</code> to the repo</li>
+              <li>Go to <strong>Settings → Pages</strong> in the repo</li>
+              <li>Under "Source" select <strong>Deploy from branch → main</strong></li>
+              <li>Click Save. Your site is live at <code>yourusername.github.io/nova-assistant</code> ✅</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Troubleshooting -->
+  <section class="section" style="padding-top:0">
+    <div class="section-inner">
+      <div class="section-label">Help</div>
+      <h2 class="section-title reveal">Troubleshooting <span class="highlight">common errors.</span></h2>
+
+      <div style="border-radius:var(--radius);border:1px solid var(--border);overflow:hidden" class="reveal">
+        <table class="trouble-table">
+          <thead>
+            <tr>
+              <th>Error</th>
+              <th>Cause</th>
+              <th>Fix</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="err">ModuleNotFoundError: flask</span></td>
+              <td>Flask not installed</td>
+              <td class="fix">Run: <code style="font-family:var(--font-mono)">pip install flask</code></td>
+            </tr>
+            <tr>
+              <td><span class="err">ModuleNotFoundError: wikipedia</span></td>
+              <td>Wikipedia library missing</td>
+              <td class="fix">Run: <code style="font-family:var(--font-mono)">pip install wikipedia</code></td>
+            </tr>
+            <tr>
+              <td><span class="err">ModuleNotFoundError: pyttsx3</span></td>
+              <td>pyttsx3 not installed</td>
+              <td class="fix">Run: <code style="font-family:var(--font-mono)">pip install pyttsx3</code></td>
+            </tr>
+            <tr>
+              <td><span class="err">Address already in use (port 5000)</span></td>
+              <td>Another app uses port 5000</td>
+              <td class="fix">In app.py change port=5000 to port=5001, then go to :5001</td>
+            </tr>
+            <tr>
+              <td><span class="err">No voice in browser</span></td>
+              <td>Browser blocked audio/mic</td>
+              <td class="fix">Click the 🔒 icon in address bar → allow Microphone and Sound</td>
+            </tr>
+            <tr>
+              <td><span class="err">pyttsx3 no sound on Mac</span></td>
+              <td>macOS TTS permission</td>
+              <td class="fix">System Settings → Privacy → Accessibility → allow Terminal</td>
+            </tr>
+            <tr>
+              <td><span class="err">python: command not found</span></td>
+              <td>Python not in PATH</td>
+              <td class="fix">Try <code style="font-family:var(--font-mono)">python3 app.py</code> or reinstall Python with "Add to PATH" checked</td>
+            </tr>
+            <tr>
+              <td><span class="err">Mic button not working</span></td>
+              <td>Browser unsupported</td>
+              <td class="fix">Switch to Google Chrome or Microsoft Edge — Firefox does not support SpeechRecognition fully</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="section" style="padding-top:0; text-align:center">
+    <div class="section-inner">
+      <div style="max-width:600px;margin:0 auto">
+        <h2 class="section-title reveal" style="text-align:center">You're all set. <span class="highlight">Start talking to Nova.</span></h2>
+        <p class="section-desc reveal" style="margin:0 auto 32px; text-align:center">
+          Run <code style="background:var(--surface2);padding:3px 10px;border-radius:6px;font-family:var(--font-mono);font-size:0.9rem;color:var(--accent2)">python app.py</code>, open your browser, and say hello.
+        </p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap" class="reveal">
+          <a href="features.html" class="btn btn-primary">✨ View All Features</a>
+          <a href="how-it-works.html" class="btn btn-secondary">🧠 How It Works</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="font-family:var(--font-display);font-size:1.3rem;font-weight:800;">⚡ <span style="background:var(--grad-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">NOVA</span></div>
+          <p>A Python AI assistant with voice output, built for learners and developers.</p>
+        </div>
+        <div class="footer-col"><h4>Pages</h4><ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="install.html">Installation</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Project</h4><ul>
+          <li><a href="https://github.com" target="_blank">GitHub Repo</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Built With</h4><ul>
+          <li><a href="https://flask.palletsprojects.com" target="_blank">Flask</a></li>
+          <li><a href="https://pyttsx3.readthedocs.io" target="_blank">pyttsx3</a></li>
+          <li><a href="https://wikipedia-api.readthedocs.io" target="_blank">Wikipedia</a></li>
+        </ul></div>
+      </div>
+      <div class="footer-bottom">
+        <span>// Nova AI Assistant — Installation Guide</span>
+        <span>© 2026 — Open Source Project</span>
+      </div>
+    </div>
+  </footer>
+  <script src="js/script.js"></script>
+</body>
+</html>

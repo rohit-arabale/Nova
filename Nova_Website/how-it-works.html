@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<!-- how-it-works.html — Nova AI Assistant — Architecture & Workflow -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova — How It Works</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .page-hero {
+      position: relative; z-index: 2;
+      padding: 140px clamp(20px,6vw,80px) 80px;
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 0%, rgba(0,212,255,0.1) 0%, transparent 65%);
+    }
+    .page-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .page-hero p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ── Flow Diagram ──────────────────────────────────────────── */
+    .flow-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 28px;
+      width: 100%;
+      max-width: 800px;
+      position: relative;
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 27px; top: 56px;
+      bottom: -32px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), rgba(124,111,255,0.1));
+    }
+
+    .flow-num {
+      flex-shrink: 0;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--grad-main);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 0 24px var(--glow);
+      position: relative;
+      z-index: 1;
+    }
+
+    .flow-content {
+      flex: 1;
+      padding-bottom: 40px;
+    }
+
+    .flow-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .flow-desc {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+
+    .flow-code {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent2);
+      position: relative;
+    }
+
+    /* ── Architecture Diagram ───────────────────────────────────── */
+    .arch-diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .arch-diagram::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(124,111,255,0.04) 0%, transparent 50%);
+    }
+
+    .arch-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      position: relative; z-index: 1;
+    }
+
+    .arch-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      text-align: center;
+      min-width: 140px;
+      flex: 1;
+      max-width: 180px;
+      transition: all 0.2s;
+    }
+    .arch-box:hover {
+      border-color: rgba(124,111,255,0.4);
+      transform: translateY(-2px);
+    }
+
+    .arch-box .icon { font-size: 2rem; margin-bottom: 8px; }
+    .arch-box .label {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .arch-box .sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+      font-family: var(--font-mono);
+    }
+
+    .arch-arrow {
+      font-size: 1.4rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 6px var(--accent));
+    }
+
+    /* ── File Tree ──────────────────────────────────────────────── */
+    .file-tree {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      line-height: 2;
+    }
+
+    .ft-dir  { color: var(--accent2); }
+    .ft-file { color: var(--text); }
+    .ft-comment { color: var(--text-dim); }
+    .ft-main { color: var(--accent); font-weight: 600; }
+
+    /* Two column layout for how it works sections */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; }
+      .arch-row { flex-direction: column; align-items: stretch; }
+      .arch-box { max-width: 100%; }
+      .arch-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-noise"></div>
+  <div class="bg-grid"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-logo"><span class="bolt">⚡</span><span>NOVA</span></a>
+    <button class="nav-hamburger">☰</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="how-it-works.html" class="active">How It Works</a></li>
+      <li><a href="install.html">Install</a></li>
+      <li><a href="install.html" class="nav-cta btn">Get Started →</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <div class="section-label" style="margin:0 auto 16px; width:fit-content">Architecture</div>
+    <h1>How Nova <span style="background:var(--grad-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">works.</span></h1>
+    <p>A clear walkthrough of the code structure, request flow, and voice output pipeline.</p>
+  </div>
+
+  <!-- Architecture Diagram -->
+  <section class="section" style="padding-top:0">
+    <div class="section-inner">
+      <div class="section-label">System Overview</div>
+      <h2 class="section-title reveal">The full <span class="highlight">data flow.</span></h2>
+      <p class="section-desc reveal">From your message to Nova's spoken response — here's every step.</p>
+
+      <div class="arch-diagram reveal">
+        <div class="arch-row">
+          <div class="arch-box">
+            <div class="icon">🧑‍💻</div>
+            <div class="label">Browser</div>
+            <div class="sub">index.html</div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box" style="border-color:rgba(124,111,255,0.4)">
+            <div class="icon">⚡</div>
+            <div class="label">Flask Server</div>
+            <div class="sub">app.py</div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box">
+            <div class="icon">🧠</div>
+            <div class="label">Commands</div>
+            <div class="sub">commands.py</div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box">
+            <div class="icon">🔊</div>
+            <div class="label">TTS Voice</div>
+            <div class="sub">speak.py</div>
+          </div>
+        </div>
+        <div style="text-align:center; margin-top:20px; font-family:var(--font-mono); font-size:0.78rem; color:var(--text-dim)">
+          JSON POST (fetch API) → process_command() → speak() + return text → JSON response → browser TTS
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step by Step Flow -->
+  <section class="section" style="padding-top:0">
+    <div class="section-inner">
+      <div class="section-label">Step by Step</div>
+      <h2 class="section-title reveal">Request <span class="highlight">lifecycle.</span></h2>
+
+      <div class="flow-wrap">
+
+        <div class="flow-step reveal">
+          <div class="flow-num">1</div>
+          <div class="flow-content">
+            <div class="flow-title">👤 User types or speaks a command</div>
+            <div class="flow-desc">
+              In the browser, the user types in the input box or clicks the 🎤 microphone button. The browser's <code>SpeechRecognition</code> API converts speech to text and fills the input box automatically.
+            </div>
+            <div class="flow-code">// Browser: index.html + Web Speech API<br>const utterance = "search web Python tutorials";</div>
+          </div>
+        </div>
+
+        <div class="flow-step reveal">
+          <div class="flow-num">2</div>
+          <div class="flow-content">
+            <div class="flow-title">📡 Browser sends a POST request to Flask</div>
+            <div class="flow-desc">
+              JavaScript's <code>fetch()</code> sends the message as JSON to the Flask backend at <code>/process</code>. This is an asynchronous call — the UI stays responsive while waiting.
+            </div>
+            <div class="flow-code">fetch('/process', {<br>&nbsp;&nbsp;method: 'POST',<br>&nbsp;&nbsp;body: JSON.stringify({ message: "search web Python" })<br>})</div>
+          </div>
+        </div>
+
+        <div class="flow-step reveal">
+          <div class="flow-num">3</div>
+          <div class="flow-content">
+            <div class="flow-title">⚡ Flask receives and routes the command</div>
+            <div class="flow-desc">
+              In <code>app.py</code>, the <code>/process</code> route extracts the message and passes it to <code>process_command()</code>. This function checks the command against keywords using <code>if/elif</code> logic to decide what to do.
+            </div>
+            <div class="flow-code">@app.route("/process", methods=["POST"])<br>def process():<br>&nbsp;&nbsp;data = request.get_json()<br>&nbsp;&nbsp;return jsonify({ "response": process_command(data["message"]) })</div>
+          </div>
+        </div>
+
+        <div class="flow-step reveal">
+          <div class="flow-num">4</div>
+          <div class="flow-content">
+            <div class="flow-title">🧠 Command handler runs the action</div>
+            <div class="flow-desc">
+              The appropriate function in <code>commands.py</code> is called. For example, <code>search_web()</code> opens Google in the browser, while <code>search_wikipedia()</code> calls the Wikipedia API and returns a summary.
+            </div>
+            <div class="flow-code">def search_web(query):<br>&nbsp;&nbsp;webbrowser.open(f"https://google.com/search?q={query}")<br>&nbsp;&nbsp;return speak(f"Searching the web for: {query}")</div>
+          </div>
+        </div>
+
+        <div class="flow-step reveal">
+          <div class="flow-num">5</div>
+          <div class="flow-content">
+            <div class="flow-title">🔊 Server speaks + returns text to browser</div>
+            <div class="flow-desc">
+              <code>speak.py</code> uses <code>pyttsx3</code> to speak the response through the server's speakers (in terminal mode) AND returns the text string. Flask sends this text back as a JSON response.
+            </div>
+            <div class="flow-code">def speak(text):<br>&nbsp;&nbsp;engine.say(text)&nbsp;&nbsp;# Speak on server<br>&nbsp;&nbsp;engine.runAndWait()<br>&nbsp;&nbsp;return text&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Return for browser</div>
+          </div>
+        </div>
+
+        <div class="flow-step reveal">
+          <div class="flow-num">6</div>
+          <div class="flow-content">
+            <div class="flow-title">💬 Browser shows text + speaks response</div>
+            <div class="flow-desc">
+              JavaScript receives the JSON response, adds a message bubble to the chat, and calls <code>SpeechSynthesis</code> to speak the text aloud in the browser — giving you both visual and audio output.
+            </div>
+            <div class="flow-code">const data = await response.json();<br>addMessage(data.response, 'nova');&nbsp;// Show text<br>speakText(data.response);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Speak it</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- File Structure -->
+  <section class="section" style="padding-top:0">
+    <div class="section-inner">
+      <div class="two-col">
+        <div>
+          <div class="section-label">Codebase</div>
+          <h2 class="section-title reveal">Project <span class="highlight">structure.</span></h2>
+          <p class="section-desc reveal" style="margin-bottom:0">
+            Nova follows a clean modular structure. Each file has one job, making it easy to understand and extend.
+          </p>
+        </div>
+        <div class="file-tree reveal">
+<span class="ft-dir">Nova_Assistant/</span><br>
+│<br>
+<span class="ft-main">├── app.py</span>          <span class="ft-comment">← Flask app &amp; routing</span><br>
+├── requirements.txt <span class="ft-comment">← pip dependencies</span><br>
+├── README.md        <span class="ft-comment">← usage guide</span><br>
+│<br>
+<span class="ft-dir">├── assistant/</span><br>
+│   ├── __init__.py  <span class="ft-comment">← package marker</span><br>
+│   <span class="ft-main">├── commands.py</span> <span class="ft-comment">← all command logic</span><br>
+│   ├── speak.py     <span class="ft-comment">← pyttsx3 TTS</span><br>
+│   └── utils.py     <span class="ft-comment">← time/date helpers</span><br>
+│<br>
+<span class="ft-dir">├── templates/</span><br>
+│   └── index.html   <span class="ft-comment">← chat web UI</span><br>
+│<br>
+<span class="ft-dir">└── static/</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── style.css    <span class="ft-comment">← dark theme styles</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack -->
+  <section class="section" style="padding-top:0">
+    <div class="section-inner">
+      <div class="section-label">Technology</div>
+      <h2 class="section-title reveal">What powers <span class="highlight">Nova.</span></h2>
+
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:20px">
+
+        <div class="card reveal">
+          <div style="font-size:2rem;margin-bottom:12px">🐍</div>
+          <div style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px">Python 3</div>
+          <div style="font-size:0.88rem;color:var(--text-muted)">The core language. All logic, routing, and voice output is pure Python. No complex frameworks.</div>
+        </div>
+
+        <div class="card reveal reveal-delay-1">
+          <div style="font-size:2rem;margin-bottom:12px">⚗️</div>
+          <div style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px">Flask</div>
+          <div style="font-size:0.88rem;color:var(--text-muted)">Lightweight Python web framework. Serves the HTML page and handles API routes at <code>/process</code>.</div>
+        </div>
+
+        <div class="card reveal reveal-delay-2">
+          <div style="font-size:2rem;margin-bottom:12px">🔊</div>
+          <div style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px">pyttsx3</div>
+          <div style="font-size:0.88rem;color:var(--text-muted)">Offline text-to-speech. Works without internet. Cross-platform: Windows, Mac, Linux.</div>
+        </div>
+
+        <div class="card reveal">
+          <div style="font-size:2rem;margin-bottom:12px">📖</div>
+          <div style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px">Wikipedia API</div>
+          <div style="font-size:0.88rem;color:var(--text-muted)">Python library for fetching Wikipedia summaries. Clean, simple, and reliable.</div>
+        </div>
+
+        <div class="card reveal reveal-delay-1">
+          <div style="font-size:2rem;margin-bottom:12px">🎤</div>
+          <div style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px">Web Speech API</div>
+          <div style="font-size:0.88rem;color:var(--text-muted)">Built into Chrome/Edge browsers. No install needed. Converts voice input to text.</div>
+        </div>
+
+        <div class="card reveal reveal-delay-2">
+          <div style="font-size:2rem;margin-bottom:12px">🌐</div>
+          <div style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px">HTML / CSS / JS</div>
+          <div style="font-size:0.88rem;color:var(--text-muted)">Pure vanilla frontend. No React, no Vue. Beginner-friendly and fast.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="font-family:var(--font-display);font-size:1.3rem;font-weight:800;">⚡ <span style="background:var(--grad-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">NOVA</span></div>
+          <p>A Python AI assistant with voice output, built for learners and developers.</p>
+        </div>
+        <div class="footer-col"><h4>Pages</h4><ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="install.html">Installation</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Project</h4><ul>
+          <li><a href="https://github.com" target="_blank">GitHub Repo</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Built With</h4><ul>
+          <li><a href="https://flask.palletsprojects.com" target="_blank">Flask</a></li>
+          <li><a href="https://pyttsx3.readthedocs.io" target="_blank">pyttsx3</a></li>
+        </ul></div>
+      </div>
+      <div class="footer-bottom">
+        <span>// Nova AI Assistant — Architecture</span>
+        <span>© 2026 — Open Source Project</span>
+      </div>
+    </div>
+  </footer>
+  <script src="js/script.js"></script>
+</body>
+</html>

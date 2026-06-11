@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova — AI Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- Luxury particle canvas -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Animated background layers -->
+  <div class="bg-base"></div>
+  <div class="bg-luxury-grid"></div>
+  <div class="bg-radial-glow"></div>
+  <div class="bg-radial-glow bg-radial-glow--right"></div>
+
+  <!-- Shimmer overlay -->
+  <div class="shimmer-overlay"></div>
+
+  <!-- ── Header ── -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-emblem">
+        <div class="emblem-ring emblem-ring--outer"></div>
+        <div class="emblem-ring emblem-ring--inner"></div>
+        <span class="emblem-icon">✦</span>
+      </div>
+      <div class="logo-text-group">
+        <span class="logo-text">NOVA</span>
+        <span class="logo-subtitle">Intelligence · Redefined</span>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="gold-rule"></div>
+    </div>
+    <div class="header-right">
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        <span class="status-label">System Active</span>
+      </div>
+      <div class="version-tag">v2.0</div>
+    </div>
+  </header>
+
+  <!-- ── Main Chat Container ── -->
+  <main class="chat-wrapper">
+
+    <!-- Decorative corner accents -->
+    <div class="corner-accent corner-accent--tl"></div>
+    <div class="corner-accent corner-accent--tr"></div>
+    <div class="corner-accent corner-accent--bl"></div>
+    <div class="corner-accent corner-accent--br"></div>
+
+    <!-- Chat history box -->
+    <div class="chat-box" id="chat-box"></div>
+
+    <!-- Typing indicator -->
+    <div class="typing-indicator" id="typing-indicator">
+      <div class="typing-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <small>Nova is composing…</small>
+    </div>
+
+    <!-- Voice toggle bar -->
+    <div class="voice-bar">
+      <label class="toggle-label">
+        <input type="checkbox" id="voice-toggle" checked />
+        <span class="toggle-switch"></span>
+        <span class="toggle-text">♪ Voice Output</span>
+      </label>
+    </div>
+
+    <!-- Divider -->
+    <div class="input-divider">
+      <span class="divider-line"></span>
+      <span class="divider-diamond">◆</span>
+      <span class="divider-line"></span>
+    </div>
+
+    <!-- Input row -->
+    <div class="input-row">
+      <button class="mic-btn" id="mic-btn" title="Voice Input">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="8" y1="22" x2="16" y2="22"/>
+        </svg>
+      </button>
+
+      <div class="input-wrapper">
+        <input
+          type="text"
+          id="user-input"
+          placeholder="Ask anything… or say 'open youtube', 'search AI news'"
+          autocomplete="off"
+        />
+        <div class="input-glow"></div>
+      </div>
+
+      <button class="send-btn" id="send-btn" onclick="sendMessage()">
+        <span class="send-text">Send</span>
+        <span class="send-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+
+    <!-- Quick command chips -->
+    <div class="chips-label">Quick Commands</div>
+    <div class="chips">
+      <button class="chip" onclick="quickSend('What time is it?')">
+        <span class="chip-icon">◷</span> Time
+      </button>
+      <button class="chip" onclick="quickSend('What is today\'s date?')">
+        <span class="chip-icon">◈</span> Date
+      </button>
+      <button class="chip" onclick="quickSend('What is artificial intelligence?')">
+        <span class="chip-icon">◎</span> AI Q&amp;A
+      </button>
+      <button class="chip" onclick="quickSend('Calculate 25 plus 17')">
+        <span class="chip-icon">◉</span> Math
+      </button>
+      <button class="chip" onclick="quickSend('Convert 5 km to m')">
+        <span class="chip-icon">◍</span> Convert
+      </button>
+      <button class="chip" onclick="quickSend('Search YouTube Flask tutorial')">
+        <span class="chip-icon">◐</span> YouTube
+      </button>
+      <button class="chip" onclick="quickSend('Open YouTube')">
+        <span class="chip-icon">▶</span> Open
+      </button>
+      <button class="chip" onclick="quickSend('Remember my project demo is tomorrow')">
+        <span class="chip-icon">◆</span> Note
+      </button>
+      <button class="chip" onclick="quickSend('Generate password 16')">
+        <span class="chip-icon">◇</span> Password
+      </button>
+      <button class="chip" onclick="quickSend('Tell me a joke')">
+        <span class="chip-icon">◁</span> Joke
+      </button>
+      <button class="chip" onclick="quickSend('Help')">
+        <span class="chip-icon">◻</span> Help
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-rule"></span>
+      <span class="footer-text">Crafted with excellence by Rohit &nbsp;·&nbsp; Nova AI v2.0 &nbsp;·&nbsp; <span class="footer-gold">Premium Edition</span></span>
+      <span class="footer-rule"></span>
+    </div>
+  </footer>
+
+  <script>
+    /* ── Particle System ─────────────────────────────────────────────── */
+    (function() {
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+      let W, H, particles = [];
+
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const GOLD = ['rgba(212,175,55,', 'rgba(255,215,0,', 'rgba(180,140,30,', 'rgba(230,190,80,', 'rgba(192,192,192,', 'rgba(255,255,255,'];
+
+      for (let i = 0; i < 80; i++) {
+        particles.push({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          r: Math.random() * 1.5 + 0.3,
+          vx: (Math.random() - 0.5) * 0.25,
+          vy: -(Math.random() * 0.4 + 0.1),
+          alpha: Math.random() * 0.5 + 0.1,
+          color: GOLD[Math.floor(Math.random() * GOLD.length)],
+          twinkle: Math.random() * Math.PI * 2
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach(p => {
+          p.twinkle += 0.02;
+          const a = p.alpha * (0.6 + 0.4 * Math.sin(p.twinkle));
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color + a + ')';
+          ctx.fill();
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.y < -5) { p.y = H + 5; p.x = Math.random() * W; }
+          if (p.x < -5) p.x = W + 5;
+          if (p.x > W + 5) p.x = -5;
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    /* ── Web Speech API ───────────────────────────────────────────────── */
+    const synth = window.speechSynthesis;
+
+    function speakText(text) {
+      const voiceEnabled = document.getElementById('voice-toggle').checked;
+      if (!voiceEnabled || !synth) return;
+      synth.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.05;
+      utterance.volume = 1.0;
+      const voices = synth.getVoices();
+      const preferred = voices.find(v => v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Karen'));
+      if (preferred) utterance.voice = preferred;
+      synth.speak(utterance);
+    }
+
+    if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = () => synth.getVoices();
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.onresult = (e) => {
+        document.getElementById('user-input').value = e.results[0][0].transcript;
+        document.getElementById('mic-btn').classList.remove('listening');
+        sendMessage();
+      };
+      recognition.onerror = recognition.onend = () => {
+        document.getElementById('mic-btn').classList.remove('listening');
+      };
+    } else {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('mic-btn').style.display = 'none';
+      });
+    }
+
+    document.getElementById('mic-btn').addEventListener('click', () => {
+      if (!recognition) return;
+      document.getElementById('mic-btn').classList.add('listening');
+      recognition.start();
+    });
+
+    /* ── Chat Functions ───────────────────────────────────────────────── */
+    function addMessage(text, sender) {
+      const chatBox = document.getElementById('chat-box');
+      const div = document.createElement('div');
+      div.classList.add('msg', sender === 'user' ? 'user-msg' : 'bot-msg');
+
+      const meta = document.createElement('div');
+      meta.classList.add('msg-meta');
+
+      const label = document.createElement('span');
+      label.classList.add('msg-label');
+      label.textContent = sender === 'user' ? '— You' : '✦ Nova';
+
+      const time = document.createElement('span');
+      time.classList.add('msg-time');
+      time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      meta.appendChild(label);
+      meta.appendChild(time);
+
+      const bubble = document.createElement('div');
+      bubble.classList.add('bubble');
+
+      // Typewriter effect for Nova
+      if (sender !== 'user') {
+        bubble.textContent = '';
+        div.appendChild(meta);
+        div.appendChild(bubble);
+        chatBox.appendChild(div);
+        chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+        let i = 0;
+        const interval = setInterval(() => {
+          bubble.textContent += text[i++];
+          chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+          if (i >= text.length) clearInterval(interval);
+        }, 18);
+      } else {
+        bubble.textContent = text;
+        div.appendChild(meta);
+        div.appendChild(bubble);
+        chatBox.appendChild(div);
+        chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+      }
+    }
+
+    function showTyping(show) {
+      document.getElementById('typing-indicator').style.display = show ? 'flex' : 'none';
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('user-input');
+      const message = input.value.trim();
+      if (!message) return;
+
+      addMessage(message, 'user');
+      input.value = '';
+      showTyping(true);
+
+      try {
+        const res = await fetch('/process', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message })
+        });
+        const data = await res.json();
+        showTyping(false);
+        addMessage(data.response, 'nova');
+        speakText(data.response);
+      } catch (err) {
+        showTyping(false);
+        const errMsg = "Connection unavailable. Please ensure the server is running.";
+        addMessage(errMsg, 'nova');
+        speakText(errMsg);
+      }
+    }
+
+    function quickSend(text) {
+      document.getElementById('user-input').value = text;
+      sendMessage();
+    }
+
+    document.getElementById('user-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    /* ── Welcome ──────────────────────────────────────────────────────── */
+    window.addEventListener('DOMContentLoaded', () => {
+      const hour = new Date().getHours();
+      const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+      const welcome = `${greeting}. I am Nova — your premium AI assistant, crafted by Rohit. I can answer questions, search the web and YouTube, open websites, save notes, solve equations, convert units, generate secure passwords, and much more. How may I assist you today?`;
+      setTimeout(() => {
+        addMessage(welcome, 'nova');
+        speakText(welcome);
+      }, 600);
+    });
+  </script>
+</body>
+</html>

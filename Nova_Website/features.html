@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<!-- features.html — Nova AI Assistant — All Features -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova — Features</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .page-hero {
+      position: relative; z-index: 2;
+      padding: 140px clamp(20px,6vw,80px) 80px;
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 0%, rgba(124,111,255,0.12) 0%, transparent 65%);
+    }
+    .page-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .page-hero p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ── Feature Grid ─────────────────────────────────────────── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .feat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feat-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--grad-main);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .feat-card:hover::after { transform: scaleX(1); }
+    .feat-card:hover {
+      border-color: rgba(124,111,255,0.35);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 48px rgba(124,111,255,0.1);
+    }
+
+    .feat-icon-wrap {
+      width: 56px; height: 56px;
+      border-radius: var(--radius-sm);
+      background: rgba(124,111,255,0.12);
+      border: 1px solid rgba(124,111,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 18px;
+    }
+
+    .feat-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feat-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+
+    .feat-examples {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .feat-example {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--accent2);
+      background: rgba(0,212,255,0.06);
+      border: 1px solid rgba(0,212,255,0.15);
+      border-radius: 6px;
+      padding: 5px 10px;
+    }
+
+    .feat-example::before { content: '» '; opacity: 0.5; }
+
+    /* ── Command Reference Table ──────────────────────────────── */
+    .cmd-table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    thead tr {
+      background: var(--surface2);
+    }
+
+    thead th {
+      padding: 14px 20px;
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(120,100,255,0.08);
+      transition: background 0.2s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(124,111,255,0.05); }
+
+    td {
+      padding: 13px 20px;
+      vertical-align: top;
+    }
+
+    .cmd-text {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--accent2);
+    }
+
+    /* ── Sites Grid ───────────────────────────────────────────── */
+    .sites-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .site-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: default;
+    }
+
+    .site-chip:hover {
+      border-color: rgba(124,111,255,0.4);
+      background: rgba(124,111,255,0.08);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-noise"></div>
+  <div class="bg-grid"></div>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <a href="index.html" class="nav-logo"><span class="bolt">⚡</span><span>NOVA</span></a>
+    <button class="nav-hamburger">☰</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="features.html" class="active">Features</a></li>
+      <li><a href="how-it-works.html">How It Works</a></li>
+      <li><a href="install.html">Install</a></li>
+      <li><a href="install.html" class="nav-cta btn">Get Started →</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <div class="section-label" style="margin:0 auto 16px; width:fit-content">All Features</div>
+    <h1>Everything Nova <span style="background:var(--grad-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">can do.</span></h1>
+    <p>From web searches to voice responses — here's the full capability list.</p>
+  </div>
+
+  <!-- Features Grid -->
+  <section class="section" style="padding-top:0">
+    <div class="section-inner">
+      <div class="features-grid">
+
+        <div class="feat-card reveal">
+          <div class="feat-icon-wrap">🔊</div>
+          <div class="feat-title">Voice Responses (TTS)</div>
+          <div class="feat-desc">
+            Every response is spoken aloud using two layers: <strong>pyttsx3</strong> on the server (Python), and the browser's built-in <strong>Web Speech API</strong>. No internet needed for voice.
+          </div>
+          <div class="feat-examples">
+            <span class="feat-example">Offline, no API key needed</span>
+            <span class="feat-example">Adjustable rate & volume</span>
+          </div>
+        </div>
+
+        <div class="feat-card reveal reveal-delay-1">
+          <div class="feat-icon-wrap">🎤</div>
+          <div class="feat-title">Voice Input (Mic)</div>
+          <div class="feat-desc">
+            Click the 🎤 button in the browser to speak your command. Nova uses the browser's <strong>SpeechRecognition API</strong> — no extra library needed.
+          </div>
+          <div class="feat-examples">
+            <span class="feat-example">Works in Chrome & Edge</span>
+            <span class="feat-example">One tap to speak</span>
+          </div>
+        </div>
+
+        <div class="feat-card reveal reveal-delay-2">
+          <div class="feat-icon-wrap">📖</div>
+          <div class="feat-title">Wikipedia Search</div>
+          <div class="feat-desc">
+            Ask Nova to search Wikipedia and it will read out a 3-sentence summary. Handles disambiguation errors and missing pages gracefully.
+          </div>
+          <div class="feat-examples">
+            <span class="feat-example">search wikipedia Python</span>
+            <span class="feat-example">wiki Albert Einstein</span>
+          </div>
+        </div>
+
+        <div class="feat-card reveal">
+          <div class="feat-icon-wrap">🔍</div>
+          <div class="feat-title">Google Web Search</div>
+          <div class="feat-desc">
+            Instantly opens a Google search in your browser. Just prefix with "search" or "find" — Nova builds the URL and launches it.
+          </div>
+          <div class="feat-examples">
+            <span class="feat-example">search web Python tutorials</span>
+            <span class="feat-example">find best laptops 2026</span>
+          </div>
+        </div>
+
+        <div class="feat-card reveal reveal-delay-1">
+          <div class="feat-icon-wrap">🌐</div>
+          <div class="feat-title">Open Websites</div>
+          <div class="feat-desc">
+            Nova knows 18+ websites. Just say "open [name]" and it launches it in your default browser. Easy to add more in commands.py.
+          </div>
+          <div class="feat-examples">
+            <span class="feat-example">open youtube</span>
+            <span class="feat-example">open github</span>
+          </div>
+        </div>
+
+        <div class="feat-card reveal reveal-delay-2">
+          <div class="feat-icon-wrap">🕐</div>
+          <div class="feat-title">Time & Date</div>
+          <div class="feat-desc">
+            Ask for the current time or today's date and Nova reads it back in a friendly format including the day of the week.
+          </div>
+          <div class="feat-examples">
+            <span class="feat-example">what time is it?</span>
+            <span class="feat-example">what is today's date?</span>
+          </div>
+        </div>
+
+        <div class="feat-card reveal">
+          <div class="feat-icon-wrap">💬</div>
+          <div class="feat-title">Smart Conversation</div>
+          <div class="feat-desc">
+            Nova responds to greetings, "thank you", "bye", "who are you", and even tells jokes. Responses are randomized so it doesn't feel repetitive.
+          </div>
+          <div class="feat-examples">
+            <span class="feat-example">tell me a joke</span>
+            <span class="feat-example">who are you?</span>
+          </div>
+        </div>
+
+        <div class="feat-card reveal reveal-delay-1">
+          <div class="feat-icon-wrap">⚡</div>
+          <div class="feat-title">Quick Command Chips</div>
+          <div class="feat-desc">
+            The web UI shows clickable shortcut buttons for the most common commands so you can try Nova immediately without typing.
+          </div>
+          <div class="feat-examples">
+            <span class="feat-example">One-click: Time, Date, Search</span>
+            <span class="feat-example">One-click: YouTube, Help, Joke</span>
+          </div>
+        </div>
+
+        <div class="feat-card reveal reveal-delay-2">
+          <div class="feat-icon-wrap">🛡️</div>
+          <div class="feat-title">Error Handling</div>
+          <div class="feat-desc">
+            Every command is wrapped in try/except. If Wikipedia is down, pyttsx3 fails, or you type gibberish — Nova responds gracefully with a helpful message.
+          </div>
+          <div class="feat-examples">
+            <span class="feat-example">No crashes on bad input</span>
+            <span class="feat-example">Friendly fallback messages</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Command Reference -->
+  <section class="section" style="padding-top:0">
+    <div class="section-inner">
+      <div class="section-label">Quick Reference</div>
+      <h2 class="section-title reveal">Command <span class="highlight">cheat sheet.</span></h2>
+
+      <div class="cmd-table-wrap reveal">
+        <table>
+          <thead>
+            <tr>
+              <th>You Say</th>
+              <th>What Nova Does</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="cmd-text">search wikipedia [topic]</span></td><td>Reads Wikipedia summary aloud</td><td>search wikipedia Python</td></tr>
+            <tr><td><span class="cmd-text">wiki [topic]</span></td><td>Reads Wikipedia summary aloud</td><td>wiki black holes</td></tr>
+            <tr><td><span class="cmd-text">search web [query]</span></td><td>Opens Google search</td><td>search web AI tutorials</td></tr>
+            <tr><td><span class="cmd-text">find [query]</span></td><td>Opens Google search</td><td>find Python cheatsheet</td></tr>
+            <tr><td><span class="cmd-text">open [website]</span></td><td>Opens website in browser</td><td>open youtube</td></tr>
+            <tr><td><span class="cmd-text">what time is it</span></td><td>Speaks current time</td><td>what time is it?</td></tr>
+            <tr><td><span class="cmd-text">what is today's date</span></td><td>Speaks today's date + day</td><td>what day is it today?</td></tr>
+            <tr><td><span class="cmd-text">hello / hi / hey</span></td><td>Greets you back</td><td>hey Nova!</td></tr>
+            <tr><td><span class="cmd-text">how are you</span></td><td>Nova replies with status</td><td>how are you doing?</td></tr>
+            <tr><td><span class="cmd-text">tell me a joke</span></td><td>Tells a programmer joke</td><td>joke</td></tr>
+            <tr><td><span class="cmd-text">who are you</span></td><td>Nova introduces itself</td><td>what can you do?</td></tr>
+            <tr><td><span class="cmd-text">help</span></td><td>Lists all capabilities</td><td>help</td></tr>
+            <tr><td><span class="cmd-text">bye / goodbye</span></td><td>Sends you off warmly</td><td>see you later</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Supported Sites -->
+  <section class="section" style="padding-top:0">
+    <div class="section-inner">
+      <div class="section-label">Open With Voice</div>
+      <h2 class="section-title reveal">18+ supported <span class="highlight">websites.</span></h2>
+      <p class="section-desc reveal">Just say "open [name]" for any of these.</p>
+
+      <div class="sites-grid reveal">
+        <div class="site-chip">▶ YouTube</div>
+        <div class="site-chip">🔍 Google</div>
+        <div class="site-chip">🐙 GitHub</div>
+        <div class="site-chip">📧 Gmail</div>
+        <div class="site-chip">🐦 Twitter</div>
+        <div class="site-chip">📸 Instagram</div>
+        <div class="site-chip">👥 Facebook</div>
+        <div class="site-chip">💼 LinkedIn</div>
+        <div class="site-chip">🤖 Reddit</div>
+        <div class="site-chip">🎬 Netflix</div>
+        <div class="site-chip">🛒 Amazon</div>
+        <div class="site-chip">💻 Stack Overflow</div>
+        <div class="site-chip">📖 Wikipedia</div>
+        <div class="site-chip">🗺️ Google Maps</div>
+        <div class="site-chip">📰 Google News</div>
+        <div class="site-chip">🤖 ChatGPT</div>
+        <div class="site-chip">💬 WhatsApp Web</div>
+        <div class="site-chip">🌍 Google Translate</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="font-family:var(--font-display);font-size:1.3rem;font-weight:800;">⚡ <span style="background:var(--grad-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">NOVA</span></div>
+          <p>A Python AI assistant with voice output, built for learners and developers.</p>
+        </div>
+        <div class="footer-col"><h4>Pages</h4><ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="install.html">Installation</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Project</h4><ul>
+          <li><a href="https://github.com" target="_blank">GitHub Repo</a></li>
+          <li><a href="install.html">Requirements</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Built With</h4><ul>
+          <li><a href="https://flask.palletsprojects.com" target="_blank">Flask</a></li>
+          <li><a href="https://pyttsx3.readthedocs.io" target="_blank">pyttsx3</a></li>
+          <li><a href="https://wikipedia-api.readthedocs.io" target="_blank">Wikipedia</a></li>
+        </ul></div>
+      </div>
+      <div class="footer-bottom">
+        <span>// Nova AI Assistant — Features</span>
+        <span>© 2026 — Open Source Project</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
